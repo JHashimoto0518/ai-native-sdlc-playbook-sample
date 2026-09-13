@@ -7,10 +7,13 @@
 - セットアップ: make setup（.venv を作り requirements.txt を入れる）
 - テスト: make test（pytest。末尾が "N passed" で終わること）
 - Lint: make lint（ruff。"All checks passed!" と出ること）
+- Eval: make evals（エージェントを制御する設定の回帰テスト。pytest。末尾が "N passed, 1 xfailed" で終わること）
 
 ## 作業の検証
 
 タスクを完了と報告する前に `make test` と `make lint` を実行し、その出力を貼ること。テストが失敗したら、テストではなくコードを直すこと。
+
+CLAUDE.md、`.claude/`、`scripts/`、`evals/` のいずれかに触れた変更では `make evals` も実行すること。制御そのものが劣化していないかを見る回帰テストで、`make test` では落ちない。
 
 ## 規約
 
@@ -25,9 +28,11 @@
 - claims_api/core/ — claims-core クライアントと TTL キャッシュ
 - claims_api/auth.py — ゲートウェイ JWT の検証。全ルートで共用
 - claims_api/legacy_v1/ — 凍結中。下記参照
+- evals/ — エージェントを制御する設定の回帰テスト。claims_api/ の検証ではない
 
 ## Claude が間違えやすいこと
 
 - claims_api/legacy_v1/ を編集しないこと。このパッケージは凍結されており、hook が書き込みをブロックする。新しい作業は v2 側で行う。
 - routes/status.py のレスポンス射影を「claims-core が返したものすべて」に広げないこと。許可リストは定型句ではなく制御である。
+- evals/test_controls.py の xfail を「落ちているテスト」として直さないこと。既知の穴を記録するためのもので、strict=True により穴が塞がると XPASS で落ちる。そのときは spec/agent-evals.md と spec/review-pass.md を更新する。
 - テストを通すために core/claims_core.py のキャッシュを外さないこと。claims-core は 50 rps でレートリミットされている（plan/claims-status.md のリスク欄）。

@@ -2,7 +2,7 @@ VENV := .venv
 PY := $(VENV)/bin/python
 PIP := $(VENV)/bin/pip
 
-.PHONY: setup test lint clean
+.PHONY: setup test lint evals clean
 
 setup:
 	python3 -m venv $(VENV)
@@ -14,6 +14,11 @@ test:
 
 lint:
 	$(VENV)/bin/ruff check .
+
+# エージェントを制御する設定の回帰テスト。testpaths は tests のままなので
+# evals を明示して渡す（spec/agent-evals.md の設計節）。
+evals:
+	$(VENV)/bin/pytest evals -q
 
 clean:
 	rm -rf $(VENV) .pytest_cache .ruff_cache

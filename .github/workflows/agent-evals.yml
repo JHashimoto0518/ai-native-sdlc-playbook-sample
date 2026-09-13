@@ -1,0 +1,47 @@
+# エージェントを制御する設定の回帰テスト（spec/agent-evals.md R3）。
+#
+# 起動条件を制御のパスに絞ってある。claims_api/ の変更では走らない。
+# 制御が変わっていないのに制御の回帰テストを回す理由が無く、条件を広げると
+# 「いつも走っているもの」になって差分との対応が読めなくなるため。
+# 広げるときは spec R3 を先に更新すること。
+#
+# push と pull_request で paths を二重に書いているのは、GitHub Actions が
+# YAML のアンカーとエイリアスを解釈しないためである。片方だけ変えないこと。
+name: agent-evals
+
+on:
+  push:
+    paths:
+      - "CLAUDE.md"
+      - ".claude/**"
+      - "scripts/**"
+      - "evals/**"
+      - "Makefile"
+      - ".github/workflows/agent-evals.yml"
+  pull_request:
+    paths:
+      - "CLAUDE.md"
+      - ".claude/**"
+      - "scripts/**"
+      - "evals/**"
+      - "Makefile"
+      - ".github/workflows/agent-evals.yml"
+
+jobs:
+  evals:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: setup
+        run: make setup
+
+      # 既知の穴は xfail(strict=True) で記録してある（spec R5）。
+      # 穴が塞がれると XPASS になり、このジョブは赤くなる。意図した挙動であり、
+      # そのときは evals/test_controls.py と spec を更新すること。
+      - name: evals
+        run: make evals
