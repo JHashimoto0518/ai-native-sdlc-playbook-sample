@@ -22,9 +22,20 @@ Phase 1 では要求を1本だけ端から端まで通しています。プレ�
 
 ## Phase 3 — ループを閉じる（Stage 4 と Stage 6）
 
-- `evals/` の eval スイートと `.github/workflows/agent-evals.yml`。`CLAUDE.md` や `.claude/**` が変わったら走らせる。エージェントを制御する設定にも、コードと同じ回帰テストを課すという考え方。
+3項目のうち1項目が入りました。成果物の連鎖は `intent/agent-evals.md` → `spec/agent-evals.md` → `plan/agent-evals.md` です。
+
+入ったもの:
+
+- `evals/` の eval スイートと `.github/workflows/agent-evals.yml`。`CLAUDE.md`、`.claude/**`、`scripts/**` が変わったときだけ走ります。エージェントを制御する設定にも、コードと同じ回帰テストを課すという考え方です。既知の穴は `xfail(strict=True)` として記録してあり、塞いだ時点で CI が落ちて成果物の更新を促します。
+
+まだ入っていないもの:
+
 - `bands.yaml` と決定的な検知スクリプト。1σ はログのみ、2σ は読み取り専用で診断、3σ で PR の起票または事前承認済み runbook の実行を許す。
 - 書き戻し。診断結果を次の `intent/*.md` にする。これがあってはじめて、この工程は直線ではなくループになる。
+
+**この2項目が残っている間、Phase 3 は完成していません。** 入ったのは「制御が劣化したら気づく」ところまでで、運用の観測から次の要求が生まれる経路はまだありません。工程は依然として直線です。
+
+また eval が測れるのは決定的な制御だけです。skill や `CLAUDE.md` が実際にセッションの出力を変えているかは検証していません（`spec/agent-evals.md` の CONCERN-1）。ワークフローを置いたことと、GitHub 上で CI が回っていることも別です（CONCERN-2）。
 
 ## どのフェーズでも扱わないもの
 
