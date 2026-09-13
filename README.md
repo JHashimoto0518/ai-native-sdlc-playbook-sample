@@ -6,7 +6,7 @@ Anthropic の [The AI-Native SDLC playbook](https://claude.com/blog/the-ai-nativ
 
 Anthropic 公式のものではありません。記事を読んだ一個人が実践してみた結果です。
 
-これは **Phase 1** です。要求を1本だけ端から端まで通すことで、リポジトリを大きくせずに成果物の連鎖が見えるようにしています。レビュー、承認ゲート、ループを閉じる部分は後続フェーズで扱います。
+これは **Phase 1** と、**Phase 2 の一部**です。Phase 1 で要求を1本だけ端から端まで通し、リポジトリを大きくせずに成果物の連鎖が見えるようにしています。Phase 2 からはレビュー基準（`REVIEW.md`）と verifier サブエージェントだけが入っています。承認ゲート、CI/CD の配線、ループを閉じる部分はまだです。`docs/phases.md` を参照してください。
 
 ## まず何を読むか
 
@@ -37,6 +37,8 @@ git log --reverse --stat
 | `.claude/hooks/protect-paths.sh` | Hooks as build-time guardrails（Stage 3） | 決定的。違反をほぼ不可能にする |
 | `scripts/check-endpoints.sh` | Skills の Governance considerations | skill の1条項に対する決定的なバックストップ |
 | `Makefile` と CLAUDE.md の検証ブロック | Give Claude a feedback loop（Stage 4） | 人が見る前にエージェント自身が検証する |
+| `REVIEW.md` | レビューとゲート（Stage 5） | 助言的。人とエージェントが共有するレビュー基準 |
+| `.claude/agents/verifier.md` | レビューとゲート（Stage 5） | 助言的。読み取り専用で、指摘した箇所を自分で直せない |
 
 skill と hook は意図的に対にしてあります。記事が言うとおり、skill は助言的で遵守を強制できないため、必ず守らせたいポリシーには決定的な裏付けが要ります。ここでは skill が「上流のレコードをそのまま返すな」と書き、`scripts/check-endpoints.sh` が実際に返しているルートがあればビルドを落とします。
 
@@ -51,9 +53,11 @@ make lint    # All checks passed!
 ./scripts/check-endpoints.sh
 ```
 
-## Phase 1 に入っていないもの
+## まだ入っていないもの
 
-`REVIEW.md` と PR レビューのループ、承認ゲートとしての hook、CI/CD の配線、eval スイート、そして次の `intent.md` を書き出す監視バンド。これらは Phase 2 と Phase 3 です。`docs/phases.md` を参照してください。
+PR レビューのループ（`claude-code-action` と `@claude`）、承認ゲートとしての hook、ブランチ保護と CODEOWNERS、CI/CD の配線、eval スイート、そして次の `intent.md` を書き出す監視バンド。Phase 2 の残りと Phase 3 です。`docs/phases.md` を参照してください。
+
+`REVIEW.md` と verifier が入ったことで基準は置かれましたが、**マージそのものを止める仕組みはまだありません。** どちらも助言的な制御で、所見は無視できます。基準を置いたことと、基準が守られることは別です。
 
 ## 制作について
 
