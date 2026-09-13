@@ -9,7 +9,7 @@ Phase 1 では要求を1本だけ端から端まで通しています。プレ�
 入ったもの:
 
 - リポジトリ直下の `REVIEW.md`。レビューのパス（bugs / security / spec と plan への適合）、Important と nit の線引き、nit の上限、除外するパス。
-- `.claude/agents/` の verifier サブエージェント。読み取り専用のツールしか持たないため、自分が指摘した箇所を自分で直せません。
+- `.claude/agents/` の verifier サブエージェント。Edit と Write を持たないため、自分が指摘した箇所を自分で直せません。
 
 まだ入っていないもの:
 

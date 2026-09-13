@@ -38,7 +38,7 @@ git log --reverse --stat
 | `scripts/check-endpoints.sh` | Skills の Governance considerations | skill の1条項に対する決定的なバックストップ |
 | `Makefile` と CLAUDE.md の検証ブロック | Give Claude a feedback loop（Stage 4） | 人が見る前にエージェント自身が検証する |
 | `REVIEW.md` | レビューとゲート（Stage 5） | 助言的。人とエージェントが共有するレビュー基準 |
-| `.claude/agents/verifier.md` | レビューとゲート（Stage 5） | 助言的。読み取り専用で、指摘した箇所を自分で直せない |
+| `.claude/agents/verifier.md` | レビューとゲート（Stage 5） | 助言的。Edit と Write を持たないため、指摘した箇所を自分で直せない |
 
 skill と hook は意図的に対にしてあります。記事が言うとおり、skill は助言的で遵守を強制できないため、必ず守らせたいポリシーには決定的な裏付けが要ります。ここでは skill が「上流のレコードをそのまま返すな」と書き、`scripts/check-endpoints.sh` が実際に返しているルートがあればビルドを落とします。
 

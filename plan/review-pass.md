@@ -7,7 +7,7 @@
 ## 変更するファイル
 
 - REVIEW.md（新規）— レビューの基準。3パス、Important と nit の線引き、nit の上限、除外パス
-- .claude/agents/verifier.md（新規）— 基準を適用する読み取り専用のサブエージェント
+- .claude/agents/verifier.md（新規）— 基準を適用するサブエージェント。Edit と Write を持たせない
 - docs/phases.md（更新）— Phase 2 の一覧から実装済みの2項目を落とす
 - README.md（更新）— 制御の表に2ファイルを追加し、「Phase 1 に入っていないもの」から REVIEW.md を外す
 

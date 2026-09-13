@@ -29,11 +29,15 @@ CLAUDE.md に直接書かない理由は「採らなかった選択肢」とし�
 
 パス2は既存の .claude/skills/secure-api-review/SKILL.md の5条項をそのまま適用する。レビュー用に基準を書き直さない。二重管理になり、いずれ食い違うため。
 
+パス1は、テストが通っていることを前提とする。緑であることは決定的な検証（make test / make lint）が既に示しているため、パス1が見るのは**検証自体が緩められていないか**である。アサーションの削除、テストの skip、期待値を実装に合わせる変更は、テストが緑でも Important とする。CLAUDE.md の「テストが失敗したら、テストではなくコードを直すこと」を、レビューの時点でもう一度検査することになる。
+
 ### verifier の権限（R5）
 
-verifier には読み取り専用のツールだけを与える。Edit と Write を持たせない。
+verifier に Edit と Write を持たせない。与えるのは Bash / Read / Grep / Glob である。
 
 自分が指摘した箇所を自分で直せないことが、この器の要点である。直せるなら、レビューと実装が同じ主体に戻り、intent が問題としている「書いた本人が承認している」状態に戻る。
+
+Bash は落とせない。REVIEW.md が要求する決定的な検証（make test / make lint / scripts/check-endpoints.sh）の実行に要る。したがってこの器が保証するのは「読み取り専用」ではなく「Edit と Write という編集経路を持たない」ことである。sed -i やリダイレクトによる Bash 経由の書き込みは原理的には可能で、下記スコープ外に挙げたとおり .claude/settings.json の PreToolUse matcher が Edit|Write のみであるため hook も捕捉しない。この差を README や docs/phases.md で「読み取り専用」と書かないこと。Bash を検証コマンドの許可リストに絞る案は、その matcher の件と併せて別途判断する。
 
 ## intent から引き継いだ制約
 
